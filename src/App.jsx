@@ -1,10 +1,9 @@
-import { Toaster } from "@/components/ui/toaster"
-import { QueryClientProvider } from '@tanstack/react-query'
-import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React, { useState } from "react";
+import { Toaster } from "@/components/ui/toaster";
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClientInstance } from '@/lib/query-client';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
-import { AuthProvider, useAuth } from '@/lib/AuthContext';
-import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 import Portfolio from '@/pages/Portfolio';
 import ManageServers from '@/pages/ManageServers';
@@ -13,63 +12,54 @@ import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import { Navigate } from 'react-router-dom';
-// Add page imports here
 
 const AuthenticatedApp = () => {
-  const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  // Check browser storage to see if password access was already granted
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem("site_access_granted") === "true";
+  });
 
-  // Show loading spinner while checking app public settings or auth
-  if (isLoadingPublicSettings || isLoadingAuth) {
-    return (
-      <div className="fixed inset-0 flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin"></div>
-      </div>
-    );
-  }
+  // Function to grant access (you will pass this to your custom password check)
+  const handleAccessGranted = () => {
+    localStorage.setItem("site_access_granted", "true");
+    setIsAuthenticated(true);
+  };
 
-  // Handle authentication errors
-  if (authError) {
-    if (authError.type === 'user_not_registered') {
-      return <UserNotRegisteredError />;
-    } else if (authError.type === 'auth_required') {
-      // Redirect to login automatically
-      navigateToLogin();
-      return null;
-    }
-  }
-
-  // Render the main app
   return (
     <Routes>
-    {/* Add your page Route elements here */}
-    <Route path="/" element={<Portfolio />} />
-    <Route path="/login" element={<Login />} />
-    <Route path="/register" element={<Register />} />
-    <Route path="/forgot-password" element={<ForgotPassword />} />
-    <Route path="/reset-password" element={<ResetPassword />} />
-    <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-      <Route path="/admin/servers" element={<ManageServers />} />
-    </Route>
-    <Route path="*" element={<PageNotFound />} />
+      {/* If not authenticated, redirect the homepage root strictly to /login */}
+      <Route 
+        path="/" 
+        element={isAuthenticated ? <Portfolio /> : <Navigate to="/login" replace />} 
+      />
+      
+      {/* Route for your login page. Pass handleAccessGranted to it if you use a custom form */}
+      <Route path="/login" element={<Login onLoginSuccess={handleAccessGranted} />} />
+      
+      <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
+      
+      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+        <Route path="/admin/servers" element={<ManageServers />} />
+      </Route>
+      
+      <Route path="/*/*" element={<PageNotFound />} />
+      <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
 };
 
-
 function App() {
-
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClientInstance}>
-        <Router>
-          <ScrollToTop />
-          <AuthenticatedApp />
-        </Router>
-        <Toaster />
-      </QueryClientProvider>
-    </AuthProvider>
-  )
+    <QueryClientProvider client={queryClientInstance}>
+      <Router>
+        <ScrollToTop />
+        <AuthenticatedApp />
+      </Router>
+      <Toaster />
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
