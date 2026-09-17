@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Image } from "@/components/ui/image";
 import { X, ChevronLeft, ChevronRight, Server as ServerIcon } from "lucide-react";
-// Importation directe de vos données JSON locales
 import projectsData from "../../data/projects.json";
 
 function serverImages(s) {
@@ -110,7 +109,6 @@ export default function ServerGallery() {
   return (
     <section id="server-registry" className="relative bg-void px-6 py-24 md:px-12 md:py-32">
       <div className="mx-auto max-w-7xl">
-        {/* header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -127,8 +125,6 @@ export default function ServerGallery() {
             open the lightbox to walk through them all.
           </p>
         </motion.div>
-
-        {/* states */}
         {servers.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-sm border border-dashed border-border py-24 text-center">
             <ServerIcon className="mb-4 h-10 w-10 text-tungsten/40" />
@@ -169,7 +165,6 @@ export default function ServerGallery() {
         )}
       </div>
 
-      {/* lightbox */}
       <AnimatePresence>
         {activeServer && (
           <motion.div
@@ -177,12 +172,12 @@ export default function ServerGallery() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeLightbox}
-            className="fixed inset-0 z- flex items-center justify-center bg-void/90 p-4 backdrop-blur-sm md:p-8"
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-void/95 p-4 backdrop-blur-sm md:p-8"
           >
             <button
               onClick={closeLightbox}
               aria-label="Close"
-              className="focus-ring absolute right-5 top-5 flex h-12 w-12 items-center justify-center rounded-sm border border-border text-tungsten transition-colors hover:border-redstone hover:text-redstone"
+              className="focus-ring absolute right-5 top-5 flex h-12 w-12 items-center justify-center rounded-sm border border-border bg-bedrock text-tungsten transition-colors hover:border-redstone hover:text-redstone"
             >
               <X className="h-5 w-5" />
             </button>
@@ -211,9 +206,9 @@ export default function ServerGallery() {
               key={activeServer.id}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.2 }}
               onClick={(e) => e.stopPropagation()}
-              className="flex w-full max-w-5xl flex-col overflow-hidden rounded-sm border border-border bg-bedrock"
+              className="flex w-full max-w-5xl flex-col overflow-hidden rounded-sm border border-border bg-bedrock shadow-2xl"
             >
               <div className="relative aspect-video w-full overflow-hidden bg-void">
                 {currentImage ? (
@@ -242,7 +237,7 @@ export default function ServerGallery() {
                   <h3 className="mt-1 font-heading text-2xl font-bold text-iron md:text-3xl">{activeServer.name}</h3>
                 </div>
               </div>
-              <div className="grid grid-cols-1 gap-4 p-6 md:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 p-6 md:grid-cols-3 bg-bedrock">
                 <div className="md:col-span-2">
                   {activeServer.description && (
                     <p className="font-body text-sm leading-relaxed text-tungsten">{activeServer.description}</p>
