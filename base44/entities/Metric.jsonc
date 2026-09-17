@@ -1,0 +1,54 @@
+{
+  "name": "Metric",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "title": "Label",
+      "description": "e.g. Users Managed"
+    },
+    "value": {
+      "type": "string",
+      "title": "Value",
+      "description": "e.g. 40k+"
+    },
+    "note": {
+      "type": "string",
+      "title": "Note",
+      "description": "Short caption under the value"
+    },
+    "icon": {
+      "type": "string",
+      "title": "Icon",
+      "description": "Lucide icon name (e.g. Users, ShieldCheck)",
+      "default": "Activity"
+    },
+    "order": {
+      "type": "number",
+      "title": "Display order",
+      "default": 0,
+      "description": "Lower shows first"
+    }
+  },
+  "required": [
+    "label"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "title": "Title",
+      "description": "Project name shown on the card"
+    },
+    "tag": {
+      "type": "string",
+      "title": "Tag",
+      "description": "e.g. skript // .sk"
+    },
+    "icon": {
+      "type": "string",
+      "title": "Icon",
+      "description": "Lucide icon name (e.g. Cpu, Zap)",
+      "default": "Boxes"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description",
+      "description": "Short paragraph under the title"
+    },
+    "snippet": {
+      "type": "string",
+      "title": "Code snippet",
+      "description": "Skript/YAML code shown in the logic.extract block"
+    },
+    "image_url": {
+      "type": "string",
+      "title": "Image URL",
+      "description": "Optional macro render image (featured projects)"
+    },
+    "span": {
+      "type": "string",
+      "title": "Grid span",
+      "description": "Bento grid size class",
+      "default": "md:col-span-2"
+    },
+    "metrics": {
+      "type": "string",
+      "title": "Metrics",
+      "description": "One per line, format: value | label"
+    },
+    "order": {
+      "type": "number",
+      "title": "Display order",
+      "default": 0,
+      "description": "Lower shows first"
+    }
+  },
+  "required": [
+    "title"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

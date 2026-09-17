@@ -1,0 +1,73 @@
+{
+  "name": "Server",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "title": "Server name",
+      "description": "Name of the Minecraft server you worked on"
+    },
+    "description": {
+      "type": "string",
+      "title": "Description",
+      "description": "What you did on this server (role, work, highlights)"
+    },
+    "image_url": {
+      "type": "string",
+      "title": "Cover / logo URL",
+      "description": "Main screenshot shown on the card (the logo / cover)"
+    },
+    "images": {
+      "type": "string",
+      "title": "Work screenshots",
+      "description": "Additional work photos, one URL per line. Shown in the lightbox carousel."
+    },
+    "role": {
+      "type": "string",
+      "title": "Your role",
+      "description": "e.g. Lead Developer, Staff Architect"
+    },
+    "players": {
+      "type": "string",
+      "title": "Player count",
+      "description": "e.g. 40k+"
+    },
+    "version": {
+      "type": "string",
+      "title": "Version / stack",
+      "description": "e.g. Paper 1.20.4, BungeeCord"
+    },
+    "tags": {
+      "type": "string",
+      "title": "Tags",
+      "description": "Comma-separated: skript, plugins, moderation..."
+    },
+    "order": {
+      "type": "number",
+      "title": "Display order",
+      "default": 0,
+      "description": "Lower shows first"
+    }
+  },
+  "required": [
+    "name"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
