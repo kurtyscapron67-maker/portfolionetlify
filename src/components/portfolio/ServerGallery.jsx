@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Image } from "@/components/ui/image";
 import { X, ChevronLeft, ChevronRight, Server as ServerIcon } from "lucide-react";
@@ -71,9 +71,8 @@ function ServerCard({ server, index, onOpen }) {
 }
 
 export default function ServerGallery() {
-  // Tri automatique des serveurs selon le champ "order" défini dans votre JSON
   const servers = [...projectsData].sort((a, b) => a.order - b.order);
-  const [active, setActive] = useState(null); // server index in lightbox
+  const [active, setActive] = useState(null); 
   const [imgIndex, setImgIndex] = useState(0);
 
   const visible = servers.slice(0, 3);
@@ -225,3 +224,5 @@ export default function ServerGallery() {
                     fittingType="fill"
                   />
                 ) : (
+                  <div className="grid-chunks absolute inset-0 opacity-40" />
+                )}
