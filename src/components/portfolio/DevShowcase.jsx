@@ -3,21 +3,15 @@ import { motion } from "framer-motion";
 import { Image } from "@/components/ui/image";
 import { Terminal } from "lucide-react";
 import { getIcon } from "@/lib/iconMap";
-// Importation directe de vos données JSON locales
 import serversData from "../../data/servers.json";
 
 function parseMetrics(raw) {
   if (!raw) return [];
-  return raw
-    .split("\n")
-    .map((l) => l.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const idx = line.indexOf("|");
-      if (idx === -1) return { value: line.trim(), label: "" };
-      return { value: line.slice(0, idx).trim(), label: line.slice(idx + 1).trim() };
-    })
-    .filter((m) => m.value || m.label);
+  return raw.split("\n").map((l) => l.trim()).filter(Boolean).map((line) => {
+    const idx = line.indexOf("|");
+    if (idx === -1) return { value: line.trim(), label: "" };
+    return { value: line.slice(0, idx).trim(), label: line.slice(idx + 1).trim() };
+  }).filter((m) => m.value || m.label);
 }
 
 function CodeBlock({ code }) {
@@ -40,7 +34,7 @@ function CodeBlock({ code }) {
 
 function ProjectCard({ project, index }) {
   const [wireframe, setWireframe] = useState(false);
-  const Icon = getIcon(project.icon);
+  const Icon = getIcon(project.icon || "Boxes");
   const metrics = parseMetrics(project.metrics);
 
   return (
@@ -53,7 +47,6 @@ function ProjectCard({ project, index }) {
       onMouseLeave={() => setWireframe(false)}
       className={`group relative flex flex-col overflow-hidden rounded-sm border border-border bg-bedrock p-6 transition-colors hover:border-redstone/60 focus-ring ${project.span ?? "md:col-span-2"}`}
     >
-      {/* header */}
       <div className="mb-5 flex items-start justify-between">
         <div className="flex items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-sm border border-border bg-void text-redstone transition-transform group-hover:scale-110">
@@ -64,14 +57,11 @@ function ProjectCard({ project, index }) {
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-tungsten/70">{project.tag}</p>
           </div>
         </div>
-        <span className={`font-mono text-[10px] uppercase tracking-widest transition-colors ${wireframe ? "text-redstone" : "text-tungsten/40"}`}>
-          {wireframe ? "wireframe.on" : "wireframe.off"}
-        </span>
+        <span className={`font-mono text-[10px] uppercase tracking-widest transition-colors ${wireframe ? "text-redstone" : "text-tungsten/40"}`}>{wireframe ? "wireframe.on" : "wireframe.off"}</span>
       </div>
 
       <p className="mb-5 font-body text-sm leading-relaxed text-tungsten">{project.description}</p>
 
-      {/* metrics */}
       {metrics.length > 0 && (
         <div className="mb-5 grid grid-cols-2 gap-px overflow-hidden rounded-sm border border-border bg-border sm:grid-cols-3">
           {metrics.map((m, i) => (
@@ -83,44 +73,27 @@ function ProjectCard({ project, index }) {
         </div>
       )}
 
-      {/* image (only featured project) */}
       {project.image_url && (
         <div className="relative mb-5 overflow-hidden rounded-sm border border-border">
-          <Image
-            src={project.image_url}
-            alt={`${project.title} — macro render`}
-            className={`h-40 w-full object-cover transition-all duration-500 ${wireframe ? "scale-105 saturate-150" : "saturate-50"}`}
-            fittingType="fill"
-          />
+          <Image src={project.image_url} alt={`${project.title} — macro render`} className={`h-40 w-full object-cover transition-all duration-500 ${wireframe ? "scale-105 saturate-150" : "saturate-50"}`} fittingType="fill" />
           <div className="absolute inset-0 bg-gradient-to-t from-bedrock via-transparent to-transparent" />
-          {wireframe && (
-            <div className="absolute inset-0 grid-chunks opacity-40 mix-blend-screen" />
-          )}
         </div>
       )}
 
-      {/* code snippet */}
       <div className="mt-auto">
-        <div className="mb-2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-tungsten/60">
-          <Terminal className="h-3 w-3 text-redstone" /> logic.extract
-        </div>
+        <div className="mb-2 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-tungsten/60"><Terminal className="h-3 w-3 text-redstone" /> logic.extract</div>
         <CodeBlock code={project.snippet || ""} />
       </div>
-
-      {/* redstone trace line on hover */}
-      <span className="pointer-events-none absolute left-0 top-0 h-full w-px bg-gradient-to-b from-transparent via-redstone to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
     </motion.article>
   );
 }
 
 export default function DevShowcase() {
-  // Tri automatique des données selon le champ "order" défini dans votre JSON
   const projects = [...serversData].sort((a, b) => a.order - b.order);
 
   return (
     <section id="logic-engine" className="relative bg-void px-6 py-24 md:px-12 md:py-32">
       <div className="mx-auto max-w-7xl">
-        {/* section header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -129,25 +102,17 @@ export default function DevShowcase() {
           className="mb-16 flex flex-col gap-4 border-l-2 border-redstone pl-6"
         >
           <span className="font-mono text-xs uppercase tracking-[0.3em] text-redstone">view 02 // the logic engine</span>
-          <h2 className="font-heading text-4xl font-bold tracking-tight text-iron md:text-6xl">
-            Dev Showcase
-          </h2>
+          <h2 className="font-heading text-4xl font-bold tracking-tight text-iron md:text-6xl">Dev Showcase</h2>
           <p className="max-w-2xl font-body text-base leading-relaxed text-tungsten md:text-lg">
-            Skript systems and plugin configurations, not black-box claims. Each block exposes the
-            internals — metrics, snippets, and the wiring that makes it run.
+            Skript systems and plugin configurations, not black-box claims. Each block exposes the internals — metrics, snippets, and the wiring that makes it run.
           </p>
         </motion.div>
 
-        {/* bento grid */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-5 md:auto-rows-auto">
           {projects.length === 0 ? (
-            <p className="col-span-full rounded-sm border border-dashed border-border py-10 text-center font-mono text-xs uppercase tracking-widest text-tungsten/70">
-              no projects published yet
-            </p>
+            <p className="col-span-full rounded-sm border border-dashed border-border py-10 text-center font-mono text-xs uppercase tracking-widest text-tungsten/70">no projects published yet</p>
           ) : (
-            projects.map((p, i) => (
-              <ProjectCard key={p.id || i} project={p} index={i} />
-            ))
+            projects.map((p, i) => <ProjectCard key={p.id || i} project={p} index={i} />)
           )}
         </div>
       </div>
