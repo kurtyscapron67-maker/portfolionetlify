@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Image } from "@/components/ui/image";
-import { Terminal, Loader2 } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { Terminal } from "lucide-react";
 import { getIcon } from "@/lib/iconMap";
+// Importation directe de vos données JSON locales
+import serversData from "../../data/servers.json";
 
 function parseMetrics(raw) {
   if (!raw) return [];
@@ -113,13 +114,8 @@ function ProjectCard({ project, index }) {
 }
 
 export default function DevShowcase() {
-  const [projects, setProjects] = useState(null);
-
-  useEffect(() => {
-    base44.entities.Project.list("order", 100)
-      .then(setProjects)
-      .catch(() => setProjects([]));
-  }, []);
+  // Tri automatique des données selon le champ "order" défini dans votre JSON
+  const projects = [...serversData].sort((a, b) => a.order - b.order);
 
   return (
     <section id="logic-engine" className="relative bg-void px-6 py-24 md:px-12 md:py-32">
@@ -144,17 +140,13 @@ export default function DevShowcase() {
 
         {/* bento grid */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-5 md:auto-rows-auto">
-          {projects === null ? (
-            <div className="col-span-full flex items-center justify-center py-16 text-tungsten">
-              <Loader2 className="h-5 w-5 animate-spin text-redstone" />
-            </div>
-          ) : projects.length === 0 ? (
+          {projects.length === 0 ? (
             <p className="col-span-full rounded-sm border border-dashed border-border py-10 text-center font-mono text-xs uppercase tracking-widest text-tungsten/70">
               no projects published yet
             </p>
           ) : (
             projects.map((p, i) => (
-              <ProjectCard key={p.id} project={p} index={i} />
+              <ProjectCard key={p.id || i} project={p} index={i} />
             ))
           )}
         </div>

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
-import { base44 } from "@/api/base44Client";
 import { getIcon } from "@/lib/iconMap";
+// Importation directe de vos données JSON locales
+import metricsData from "../../data/metrics.json";
 
 function MetricCell({ metric, index }) {
   const Icon = getIcon(metric.icon);
@@ -28,13 +28,8 @@ function MetricCell({ metric, index }) {
 }
 
 export default function StaffImpact() {
-  const [metrics, setMetrics] = useState(null);
-
-  useEffect(() => {
-    base44.entities.Metric.list("order", 50)
-      .then(setMetrics)
-      .catch(() => setMetrics([]));
-  }, []);
+  // Tri automatique des données selon le champ "order" défini dans votre JSON
+  const metrics = [...metricsData].sort((a, b) => a.order - b.order);
 
   return (
     <section id="social-equilibrium" className="relative bg-bedrock px-6 py-24 md:px-12 md:py-32">
@@ -60,22 +55,16 @@ export default function StaffImpact() {
 
         {/* metric grid */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {metrics === null ? (
-            <div className="col-span-full flex items-center justify-center py-16 text-tungsten">
-              <Loader2 className="h-5 w-5 animate-spin text-redstone" />
-            </div>
-          ) : metrics.length === 0 ? (
+          {metrics.length === 0 ? (
             <p className="col-span-full rounded-sm border border-dashed border-border py-10 text-center font-mono text-xs uppercase tracking-widest text-tungsten/70">
               no metrics published yet
             </p>
           ) : (
             metrics.map((m, i) => (
-              <MetricCell key={m.id} metric={m} index={i} />
+              <MetricCell key={m.id || i} metric={m} index={i} />
             ))
           )}
         </div>
-
-
       </div>
     </section>
   );

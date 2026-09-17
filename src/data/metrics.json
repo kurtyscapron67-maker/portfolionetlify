@@ -1,0 +1,18 @@
+[
+  {
+    "id": "6aa4fe537f35ed6a802b5cda",
+    "label": "Server Managed",
+    "value": "15+",
+    "note": "All servers where I have been Staff/dev/manager",
+    "icon": "Wrench",
+    "order": 1
+  },
+  {
+    "id": "6aa4fe9097fdaaaca872b21b",
+    "label": "Users Managed",
+    "value": "5k+",
+    "note": "All servers member-counts",
+    "icon": "Users",
+    "order": 2
+  }
+]

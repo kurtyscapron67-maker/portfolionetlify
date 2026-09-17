@@ -1,0 +1,14 @@
+[
+  {
+    "id": "6aa4fffc5c89790dbaf8e98c",
+    "title": "Server Teleport without proxy",
+    "description": "/server (servername) to switch server like Velocity/Bungeecord proxy but just with 2 servers !",
+    "tag": "skript // .sk ",
+    "snippet": "command /server <text>:\n    trigger:\n        if arg-1 is \"servername\":\n            make console execute command \"execute as %player% run transfer (ip)\"\n        else:\n            send \"&cUnknown server. Available servers: &eservername\" to player\n\non tab complete of \"/server\":\n    set tab completions for position 1 to \"servername\"",
+    "image_url": "",
+    "icon": "Database",
+    "metrics": "9 | Lines of code\n7/10 | Utility (money saver)",
+    "span": "md:col-span-3",
+    "order": 1
+  }
+]
