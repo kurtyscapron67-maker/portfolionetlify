@@ -10,7 +10,7 @@ export default function Login({ onLoginSuccess }) {
     e.preventDefault();
     
     // Validating against your secret string
-    if (password === "*****7") {
+    if (password === "kurtys.67") {
       if (onLoginSuccess) {
         onLoginSuccess(); // Fires the localStorage and auth state update in App.jsx
       }

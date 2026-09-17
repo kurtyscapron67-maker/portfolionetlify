@@ -1,12 +1,9 @@
 import React, { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
-import { useAuth } from "@/lib/AuthContext";
-import { ArrowLeft, Server as ServerIcon, Code2, BarChart3, Loader2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowLeft, Server as ServerIcon, Code2, BarChart3 } from "lucide-react";
 import ServersManager from "@/components/admin/ServersManager";
 import ProjectsManager from "@/components/admin/ProjectsManager";
 import MetricsManager from "@/components/admin/MetricsManager";
-
-const ALLOWED_EMAIL = "kurtys.capron67@gmail.com";
 
 const TABS = [
   { id: "servers", label: "Servers", icon: ServerIcon },
@@ -15,21 +12,7 @@ const TABS = [
 ];
 
 export default function ManageServers() {
-  const { user, isLoadingAuth } = useAuth();
   const [tab, setTab] = useState("servers");
-
-  // Gate: only the owner's email may reach the admin tool. Hooks above; early
-  // returns below are fine because no more hooks run in this wrapper.
-  if (isLoadingAuth || !user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-void">
-        <Loader2 className="h-6 w-6 animate-spin text-redstone" />
-      </div>
-    );
-  }
-  if (user.email !== ALLOWED_EMAIL) {
-    return <Navigate to="/" replace />;
-  }
 
   return (
     <main className="min-h-screen bg-void pb-24">
