@@ -11,38 +11,35 @@ import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
-import ProtectedRoute from '@/components/ProtectedRoute';
 
 const AuthenticatedApp = () => {
-  // Check browser storage to see if password access was already granted
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem("site_access_granted") === "true";
+  // On vérifie si l'admin s'est déjà connecté au panel
+  const [isAdmin, setIsAdmin] = useState(() => {
+    return localStorage.getItem("admin_access_granted") === "true";
   });
 
-  // Function to grant access (you will pass this to your custom password check)
-  const handleAccessGranted = () => {
-    localStorage.setItem("site_access_granted", "true");
-    setIsAuthenticated(true);
+  const handleAdminGranted = () => {
+    localStorage.setItem("admin_access_granted", "true");
+    setIsAdmin(true);
   };
 
   return (
     <Routes>
-      {/* If not authenticated, redirect the homepage root strictly to /login */}
-      <Route 
-        path="/" 
-        element={isAuthenticated ? <Portfolio /> : <Navigate to="/login" replace />} 
-      />
+      {/* Le portfolio est 100% public pour tout le monde */}
+      <Route path="/" element={<Portfolio />} />
       
-      {/* Route for your login page. Pass handleAccessGranted to it if you use a custom form */}
-      <Route path="/login" element={<Login onLoginSuccess={handleAccessGranted} />} />
+      {/* La page login sert uniquement à déverrouiller le panel admin */}
+      <Route path="/login" element={<Login onLoginSuccess={handleAdminGranted} />} />
       
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       
-      <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
-        <Route path="/admin/servers" element={<ManageServers />} />
-      </Route>
+      {/* Si l'utilisateur va sur /admin/servers sans être connecté, il est envoyé sur /login */}
+      <Route 
+        path="/admin/servers" 
+        element={isAdmin ? <ManageServers /> : <Navigate to="/login" replace />} 
+      />
       
       <Route path="/*/*" element={<PageNotFound />} />
       <Route path="*" element={<PageNotFound />} />
